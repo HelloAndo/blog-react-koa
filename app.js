@@ -11,6 +11,9 @@ const cors = require('koa-cors')
 var debug = require('debug')('demo:server');
 var http = require('http');
 
+const jwt = require('jsonwebtoken')
+const { secret, codes } = require('./tools/const')
+
 const API_PREFIX = '/api'
 
 // bin/www
@@ -55,6 +58,36 @@ app.use(async (ctx, next) => {
 })
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
+
+app.use(async (ctx, next) => {
+  const { authorization } = ctx.header
+  if (authorization) {
+    try {
+      ctx.tokenPass = jwt.verify(authorization, secret)
+      await next()
+    } catch (e) {
+      let errorType = e.name.toLowerCase()
+      if (errorType === 'tokenexpirederror') {
+        ctx.body = {
+          code: codes.jwtExpired,
+          msg: 'token过期了'
+        }
+      } else if (errorType === 'jsonwebtokenerror') {
+        ctx.body = {
+          code: codes.invalidSign,
+          msg: 'token签名错误'
+        }
+      }
+    }
+  } else {
+    // ctx.tokenPass = false
+    ctx.body = {
+      code: codes.noLogin,
+      msg: '请先登录'
+    }
+  }
+})
+
 app.use(upload.routes(), upload.allowedMethods())
 app.use(article.routes(), article.allowedMethods())
 

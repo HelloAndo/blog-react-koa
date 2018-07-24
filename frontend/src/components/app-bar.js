@@ -14,10 +14,11 @@ import {
   Switch, 
   FormControlLabel, 
   FormGroup, 
+  Modal,
   Menu, 
   MenuItem } from '@material-ui/core'
 
-import { FormDialog } from './RegisterDialog'
+import { UserDialog } from './userDialog'
 
 import Api from '../services/api'
 
@@ -44,7 +45,6 @@ class MenuAppBar extends React.Component {
     auth: true,
     anchorEl: null,
     open: true,
-    openRegisterDialog: false,
     avatarSrc: '',
     user: '',
     menuOpen: this.getMenuState()
@@ -62,16 +62,14 @@ class MenuAppBar extends React.Component {
     store.dispatch(Actions.collapseMenu(!open))
   }
 
-  closeRegisterDialog = () => {
-    this.setState({
-      openRegisterDialog: false
-    })
+  closeDialog = () => {
+    store.dispatch(Actions.handleUserDialog(true))
   }
 
   switchLoginState = (e, checked) => {
+    store.dispatch(Actions.handleUserDialog(true))
     this.setState({
-      auth: checked,
-      openRegisterDialog: true
+      auth: checked
     })
 
   }
@@ -80,12 +78,12 @@ class MenuAppBar extends React.Component {
     Api.login({ user, password })
       .then(res => {
         console.log(res)
-        window.localStorage.setItem('blog-react-koa', res.token)
         // TODO: 触发弹窗关闭
         this.setState({ user })
         this.setState({
           avatarSrc: require('../images/naruto.gif')
         })
+        store.dispatch(Actions.handleUserDialog(false))
       })
       .catch(err => console.log(err))
   }
@@ -101,6 +99,7 @@ class MenuAppBar extends React.Component {
     Api.register({ user, password })
       .then(res => {
         console.log(res)
+        // TODO: 弹出toast
       })
       .catch(err => console.log(err))
   }
@@ -118,6 +117,7 @@ class MenuAppBar extends React.Component {
   }
 
   collapseMenu () {
+    console.log(store.getState())
     this.setState({
       menuOpen: this.getMenuState()
     })
@@ -189,9 +189,7 @@ class MenuAppBar extends React.Component {
               label={auth ? 'Logout' : 'Login'}
             />
           </FormGroup>
-          <FormDialog 
-            open={this.state.openRegisterDialog}
-            closeRegisterDialog={this.closeRegisterDialog} 
+          <UserDialog 
             register={this.register}
             login={this.login}
           />

@@ -26,7 +26,6 @@ export default class ViewArticle extends Component {
 
   render () {
     const { title, content, imgUrl } = this.state.article
-// debugger
     return (
       <div>
         <h1>{title}</h1>

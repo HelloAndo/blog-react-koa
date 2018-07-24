@@ -7,7 +7,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-export class FormDialog extends React.Component {
+import store from '../store/index'
+import * as Actions from '../store/actions'
+
+export class UserDialog extends React.Component {
 
   constructor () {
     super()
@@ -16,7 +19,15 @@ export class FormDialog extends React.Component {
 
   state = {
     user: '',
-    password: ''
+    password: '',
+    show: store.getState().showUserDialog
+  }
+
+  getStore () {
+    const { showUserDialog: show } = store.getState()
+    return {
+      show,
+    }
   }
 
   // state = {
@@ -27,8 +38,13 @@ export class FormDialog extends React.Component {
   //   this.setState({ open: true });
   // };
 
-  handleClose = () => {
+  closeDialog = () => {
     this.setState({ open: false });
+  }
+
+  cancel = () => {
+    store.dispatch(Actions.handleUserDialog(false))
+    this.closeDialog()
   }
 
   register = () => {
@@ -48,13 +64,21 @@ export class FormDialog extends React.Component {
     this.props.login({ user, password })
   }
 
+  componentDidMount () {
+    store.subscribe(function () {
+      this.setState({
+        show: this.getStore().show
+      })
+    }.bind(this))
+  }
+
   render() {
     return (
       <div>
         {/* <Button onClick={this.handleClickOpen}>Open form dialog</Button> */}
         <Dialog
-          open={this.props.open}
-          onClose={this.handleClose}
+          open={this.state.show}
+          onClose={this.closeDialog}
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
@@ -83,7 +107,7 @@ export class FormDialog extends React.Component {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.props.closeRegisterDialog} color="primary">
+            <Button onClick={this.cancel} color="primary">
               取消
             </Button>
             <Button onClick={this.login} color="primary">

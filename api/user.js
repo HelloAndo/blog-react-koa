@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 
-const secret = 'handsomeboy'
+const { secret } = require('../tools/const')
 
 const { UserModel, LogModel } = require('../db/model')
 
@@ -49,11 +49,11 @@ exports.USER_REGISTER = async (ctx, next) => {
         if (data.length) {
           ctx.body = resObj(2, '用户名已存在')
         } else {
-          body.token = jwt.sign({
-            user_id: user
-          }, secret, {
-            expiresIn: '1h'
-          })
+          // body.token = jwt.sign({
+          //   user_id: user
+          // }, secret, {
+          //   expiresIn: '1h'
+          // })
           let newUser = new UserModel(body)
           newUser.save()
           // 日志服务
@@ -88,7 +88,7 @@ exports.USER_LOGIN = async (ctx, next) => {
             const token = jwt.sign({
               user_id: data[0]._id
             }, secret, {
-              expiresIn: '12h'
+              expiresIn: '5'
             })
             userObj.password = password
             UserModel.findOneAndUpdate(userObj, {

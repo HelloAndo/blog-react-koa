@@ -8,3 +8,9 @@ export const collapseMenu = open => {
   }
 }
 
+export const handleUserDialog = bool => {
+  return {
+    type: ActionTypes['HANDLE_USER_DIALOG'],
+    showUserDialog: bool
+  }
+}

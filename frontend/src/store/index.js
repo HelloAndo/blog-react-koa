@@ -2,7 +2,8 @@ import { createStore } from 'redux'
 import reducer from './reducer'
 
 let menu = {
-  menuOpen: true
+  menuOpen: true,
+  showUserDialog: false
 }
 
 const store = createStore(

@@ -47,7 +47,6 @@ class Edit extends Component {
     Api.addArticle(postData)
       .then(res => {
         console.log(res)
-        debugger
       })
       .catch(err => console.log(err))
   }
