@@ -88,7 +88,7 @@ exports.USER_LOGIN = async (ctx, next) => {
             const token = jwt.sign({
               user_id: data[0]._id
             }, secret, {
-              expiresIn: '5'
+              expiresIn: '10h'
             })
             userObj.password = password
             UserModel.findOneAndUpdate(userObj, {

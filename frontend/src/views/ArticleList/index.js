@@ -48,13 +48,19 @@ class ArticleList extends Component {
     // })
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.location.pathname !== this.props.location.pathname) {
+      this.getArticleList()
+    }
+  }
+
   // shouldComponentUpdate (nextProps, nextState) {
   //   return nextProps.location.search != this.props.location.search
   // }
 
-  // componentWillUpdate () {
-  //   this.getArticleList()
-  // }
+  componentWillUpdate () {
+    // this.getArticleList()
+  }
   
   componentWillMount () {
     this.getArticleList()

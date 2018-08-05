@@ -8,6 +8,9 @@ const koaStatic = require('koa-static')
 const logger = require('koa-logger')
 const cors = require('koa-cors')
 
+const redisStore = require('koa-redis')
+const redis = require('redis')
+
 var debug = require('debug')('demo:server');
 var http = require('http');
 
