@@ -8,8 +8,7 @@ const koaStatic = require('koa-static')
 const logger = require('koa-logger')
 const cors = require('koa-cors')
 
-const redisStore = require('koa-redis')
-const redis = require('redis')
+const redis = require('./redis/index')
 
 var debug = require('debug')('demo:server');
 var http = require('http');
@@ -70,6 +69,7 @@ app.use(async (ctx, next) => {
       await next()
     } catch (e) {
       let errorType = e.name.toLowerCase()
+      // redis.
       if (errorType === 'tokenexpirederror') {
         ctx.body = {
           code: codes.jwtExpired,

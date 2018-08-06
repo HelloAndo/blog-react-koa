@@ -1,5 +1,5 @@
 const config = {
-  port: 3000,
+  port: 6379,
   mongodb: 'mongodb://127.0.0.1:27017/my_blog_database',
   redis_host: '127.0.0.1',
   redis_port: 6379,

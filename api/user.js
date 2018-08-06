@@ -4,6 +4,7 @@ const { secret } = require('../tools/const')
 
 const { UserModel, LogModel } = require('../db/model')
 
+const redis = require('../redis/index')
 
 let resObj = (code, msg, token, resData) => ({
   status: code,
@@ -100,6 +101,9 @@ exports.USER_LOGIN = async (ctx, next) => {
             //   path: '/',
             //   maxAge: 1000 * 60 * 60
             // })
+
+            redis.setToken(Object.assign(userObj, { token }))
+
             ctx.body = resObj(1, '登陆成功', token, { user, password })
           } else {
             ctx.body = resObj(2, '不存在用户名')
